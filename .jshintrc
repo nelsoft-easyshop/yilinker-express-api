@@ -1,0 +1,8 @@
+{
+  "node": true,
+  "curly": true,
+  "eqeqeq": true,
+  "undef": true,
+  "nocomma": true,
+  "unused": "vars"
+}

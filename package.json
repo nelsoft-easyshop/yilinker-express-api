@@ -1,0 +1,37 @@
+{
+  "name": "yilinker-express-api",
+  "version": "0.1.0",
+  "description": "Engine humming behind the Express API",
+  "main": "bin/www",
+  "scripts": {
+    "test": "mocha -R spec test/ --recursive"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "bookshelf": "^0.9.5",
+    "checkit": "^0.6.0",
+    "express": "^4.13.4",
+    "file-stream-rotator": "0.0.6",
+    "helmet": "^2.1.0",
+    "knex": "^0.11.5",
+    "morgan": "^1.7.0",
+    "mysql": "^2.11.0"
+  },
+  "devDependencies": {
+    "apidoc": "^0.16.1",
+    "chai": "^3.5.0",
+    "debug": "^2.2.0",
+    "jshint": "^2.9.2",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "proxyquire": "^1.7.9",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nelsoft-easyshop/yilinker-express-api.git"
+  }
+}

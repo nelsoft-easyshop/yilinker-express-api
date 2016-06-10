@@ -1,0 +1,12 @@
+# modules
+node_modules/
+
+# params
+app/config/parameters.js
+
+# logs
+npm-debug.log
+app/logs
+
+# api doc
+doc/
