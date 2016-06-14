@@ -9,7 +9,7 @@ chai.use(sinonChai);
 describe('base controller test cases', function(){
     var baseController = require('../../src/controller/base_controller'); 
     var okCode = 200;
-    var notFoundCode = 400;
+    var notFoundCode = 404;
     var resSpy = null;
 
     describe('general response builder', function(){
@@ -63,4 +63,9 @@ describe('base controller test cases', function(){
             expect(resSpy.status).to.have.calledWithExactly(notFoundCode);
         });
     });
+
+    /**
+     * @todo add test for bad request
+     * @todo add test for internal 500 error
+     */
 });

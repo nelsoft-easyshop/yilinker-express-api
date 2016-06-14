@@ -7,7 +7,7 @@
 var express = require('express');
 var app = express();
 
-var logger = require('morgan');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
 var parameters = require('./app/config/parameters');
@@ -29,7 +29,7 @@ var parameters = require('./app/config/parameters');
 
 if(app.get('env') != 'production'){
     // just log to console
-    app.use(logger('dev'));
+    app.use(morgan('dev'));
 }
 else{
     // https://www.npmjs.com/package/morgan#log-file-rotation
@@ -91,7 +91,8 @@ app.use(function(req, res, next){
 // if not production, dump trace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-        require('debug')('Express:app.js')(err);
+        console.log(err);
+        // require('debug')('Express:app.js')(err);
     });
 }
 else{

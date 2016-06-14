@@ -13,7 +13,7 @@ describe('waybill get details test cases', function(){
     var packageRepoPath = '../../repository/package';
     var resSpy = null;
     var reqMock = null;
-    var notFoundCode = 400;
+    var notFoundCode = 404;
     var foundCode = 200;
     var notFoundResponse = {
         status: 'failed',

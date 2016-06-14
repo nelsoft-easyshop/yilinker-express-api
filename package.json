@@ -33,5 +33,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/nelsoft-easyshop/yilinker-express-api.git"
+  },
+  "apidoc": {
+    "title": "dat browser title",
+    "url": "google.com",
+    "sampleUrl": "google.com",
+    "header": {
+      "title": "header title",
+      "filename": "./template/header.md"
+    },
+    "footer": {
+      "title": "footer title",
+      "filename": "./template/footer.md"
+    }
   }
 }

@@ -1,10 +1,14 @@
 var bookshelf = require('../common/db.js').bookshelf;
-var packageStatus = require('./package_status');
+var PackageStatus = require('./package_status');
+var Branch = require('./branch');
 
 var package = bookshelf.Model.extend({
     tableName: 'package',
     status: function() {
-        return this.belongsTo(packageStatus);
+        return this.belongsTo(PackageStatus);
+    },
+    originBranch: function() {
+        return this.belongsTo(Branch, 'origin_branch_id');
     }
 });
 
