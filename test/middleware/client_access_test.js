@@ -11,30 +11,31 @@ chai.use(sinonChai);
 describe('client access middleware test cases', function(){
     var accessClientPath = '../../app/middleware/client_access';
     var clientRepoPath = '../../src/repository/client';
-    var reqStub = require('express').request;
+    var basicAuth = 'basic-auth';
+    var reqMock = {};
+    var nextSpy = null;
     var resSpy = null;
-    var notAuthorizedCode = 401;
     var testClientId = 15;
     var testConsumerId = 13;
-    var nextSpy = null;
+    var notAuthorizedCode = 401;
     var authErrorJson = {
         status: 'failed',
         data: null,
         message: 'Invalid Authorization Code'
     };
 
-    describe('no authorization header', function(){
+    describe('invalid authorization header', function(){
         before(function(done){
             asyncWrapper(done, function(){
-                sinon.stub(reqStub, 'get').withArgs('Authorization').returns(undefined);
                 resSpy = {
                     status: sinon.spy(),
                     json: sinon.spy()
                 };
 
                 proxyquire(accessClientPath, {
-                    [clientRepoPath]: {}
-                })(reqStub, resSpy);
+                    [clientRepoPath]: {},
+                    [basicAuth]: sinon.stub().returns(undefined)
+                })(null, resSpy);
                 done();
             });
         });
@@ -43,103 +44,64 @@ describe('client access middleware test cases', function(){
             expect(resSpy.status).to.have.been.calledWith(notAuthorizedCode);
             expect(resSpy.json).to.have.calledWithExactly(authErrorJson);
         });
-
-        after(function(){
-           reqStub.get.restore(); 
-        });
     });
 
-
-    describe('empty authorization header', function(){
+    describe('invalid credentials', function(){
         before(function(done){
             asyncWrapper(done, function(){
-                sinon.stub(reqStub, 'get').withArgs('Authorization').returns('');
-                resSpy = {
-                    status: sinon.spy(),
-                    json: sinon.spy()
-                };
-
-                proxyquire(accessClientPath, {
-                    [clientRepoPath]: {}
-                })(reqStub, resSpy);
-                done();
-            });
-        });
-
-        it('should not auth', function(){
-            expect(resSpy.status).to.have.been.calledWith(notAuthorizedCode);
-            expect(resSpy.json).to.have.calledWithExactly(authErrorJson);
-        });
-
-        after(function(){
-           reqStub.get.restore(); 
-        });
-    });
-
-    describe('invalid authorization header content', function(){
-        before(function(done){
-            asyncWrapper(done, function(){
-                sinon.stub(reqStub, 'get').withArgs('Authorization').returns('foo');
                 resSpy = {
                     status: sinon.spy(),
                     json: sinon.spy()
                 };
 
                 var clientRepoStub = {
-                    findOneByClientKey: sinon.stub().returns(
+                    findOneByCredentials: sinon.stub().returns(
                         Promise.reject()
                     )
                 };
 
                 proxyquire(accessClientPath, {
-                    [clientRepoPath]: clientRepoStub
-                })(reqStub, resSpy);
+                    [clientRepoPath]: clientRepoStub,
+                    [basicAuth]: sinon.stub().returns({name: 'foo', pass: 'bar'})
+                })(null, resSpy);
                 done();
             });
         });
 
-        it('should not be authorized', function(){
+        it('should not auth', function(){
             expect(resSpy.status).to.have.been.calledWith(notAuthorizedCode);
             expect(resSpy.json).to.have.calledWithExactly(authErrorJson);
         });
+    });
 
-        after(function(){
-           reqStub.get.restore(); 
-        });
-    });  
-    
-    describe('valid authorization header', function(){
+    describe('correct credentials', function(){
         before(function(done){
             asyncWrapper(done, function(){
                 nextSpy = sinon.spy();
-                sinon.stub(reqStub, 'get').withArgs('Authorization').returns('legit');
                 resSpy = {
                     status: sinon.spy(),
                     json: sinon.spy()
                 };
 
                 var clientRepoStub = {
-                    findOneByClientKey: sinon.stub().returns(Promise.resolve({
+                    findOneByCredentials: sinon.stub().returns(Promise.resolve({
                         clientId: testClientId,
                         consumerId: testConsumerId
                     }))
                 };
 
                 proxyquire(accessClientPath, {
-                    [clientRepoPath]: clientRepoStub
-                })(reqStub, resSpy, nextSpy);
+                    [clientRepoPath]: clientRepoStub,
+                    [basicAuth]: sinon.stub().returns({name: 'foo', pass: 'bar'})
+                })(reqMock, resSpy, nextSpy);
                 done();
             });
         });
 
         it('should be authenticated', function(){
             expect(nextSpy).have.been.calledOnce;
-            expect(reqStub.clientId).to.equal(testClientId);
-            expect(reqStub.consumerId).to.equal(testConsumerId);
-        });
-
-        after(function(){
-           reqStub.get.restore(); 
+            expect(reqMock.clientId).to.equal(testClientId);
+            expect(reqMock.consumerId).to.equal(testConsumerId);
         });
     });
 });
