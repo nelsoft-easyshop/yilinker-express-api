@@ -140,8 +140,8 @@ module.exports.updateWaybillNumber = function(packageId){
         require: true
     })
     .then(function(packageData){
-        data = packageData.toJSON();
-        waybill = 'WBEPH' + data.originBranch.code + String('00000000000' + data.id).slice(-constants.waybillLength);
+        var data = packageData.toJSON();
+        var waybill = 'WBEPH' + data.originBranch.code + String('00000000000' + data.id).slice(-constants.waybillLength);
         return packageData.save({
             waybill_number: waybill
         })
