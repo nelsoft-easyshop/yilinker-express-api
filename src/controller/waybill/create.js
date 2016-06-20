@@ -9,17 +9,56 @@ var consumerAddressRepo = require(repoPath + '/consumer_address');
 var clientApiSettingRepo = require(repoPath + '/client_api_setting');
 
 /**
- * @api {post} /waybill/create Create Package Waybill
- * @apiVersion 0.1.0
- * @apiName WaybillCreate
+ * @api {post} waybill/create Create Package Waybill
+ * @apiDescription Endpoint for creating a waybill
+ * @apiName waybillCreate
  * @apiGroup Waybill
- *
- * @apiDescription Endpoint for generating waybill given a set of parameters.
+ * @apiVersion 1.0.0
  * 
- * @apiParam {Number} id Users unique ID.
+ * @apiExample {curl} Example usage:
+ *     curl -i http://localhost/user/4711
+ * 
+ * @apiParam    (Parameters)    {String{max of 300 chars}}      consignee_address           Consignee's Address
+ * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_name              Consignee's Name
+ * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_contact_number    Consignee's Contact Number
+ * @apiParam    (Parameters)    {String{max of 12 chars?}}      declared_value              Shipment's Value
+ * @apiParam    (Parameters)    {String{max of 500 chars}}      package_description         Brief Description of Package
+ * @apiParam    (Parameters)    {Boolean=true, false}           is_cod                      Is Package to be tagged as Cash On Delivery?
+ * @apiParam    (Parameters)    {String{max of 12 chars?}}      [amount_to_collect]         Amount to collect (Required if COD)
+ * @apiParam    (Parameters)    {String{max of 50 chars}}       [reference_number]          Any value that would be binded to this waybill
  *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess  (Success 200)   {String}                        status                      State of response
+ * @apiSuccess  (Success 200)   {Object}                        data                        Data object
+ * @apiSuccess  (Success 200)   {String}                        data.waybill_number         Waybill Number assigned by the system
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "status": "successful",
+ *         "data": {
+ *             "waybill_number": "sample_waybill",
+ *         },
+ *         message: ""
+ *     }
+ *
+ * @apiError    (Error 400)     {String}                        status                      State of response      
+ * @apiError    (Error 400)     {Object}                        data                        Data Object      
+ * @apiError    (Error 400)     {String[]}                      data.errors                 Array of error codes      
+ * @apiError    (Error 400)     {String}                        message                     Human Readable Error
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "status": "failed",
+ *       "data": {
+ *           "errors": [
+ *               "123",
+ *               "456"
+ *           ]
+ *       },
+ *       "message": "Malformed Request Parameters"
+ *     }
+ * 
  */
 module.exports = function(req, res, next){
     waybillCreateForm

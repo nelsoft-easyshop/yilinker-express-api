@@ -4,7 +4,7 @@
  * Retrieves waybill details
  * @type {Function}
  */
-module.exports.getDetails = require('./get_details');
+module.exports.getStatus = require('./get_status');
 
 /**
  * Creates waybill
