@@ -9,7 +9,7 @@ var expect = chai.expect;
 chai.use(sinonChai);
 
 describe('waybill get details test cases', function(){
-    var getDetailsPath = '../../../src/controller/waybill/get_details';
+    var getDetailsPath = '../../../src/controller/waybill/get_status';
     var packageRepoPath = '../../repository/package';
     var resSpy = null;
     var reqMock = null;
