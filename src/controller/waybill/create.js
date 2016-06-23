@@ -16,8 +16,19 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  * @apiVersion 1.0.0
  * 
  * @apiExample {curl} Example usage:
- *     curl -i http://localhost/user/4711
- * 
+ *     curl -X POST https://sandbox-express.yilinker.com/waybill/create \
+ *          -H "Content-Type: application/json" \
+ *          -u <client_key>:<client_secret> \
+ *          -d '{ 
+ *              "consignee_address": "221 B Baker St.", 
+ *              "consignee_name": "Alan Turing", 
+ *              "consignee_contact_number": "639000000000", 
+ *              "is_cod": true, 
+ *              "declared_value": "123.45", 
+ *              "package_description": "Smaug 1:1 Replica", 
+ *              "amount_to_collect": "678.90" 
+ *          }'
+ *     
  * @apiParam    (Parameters)    {String{max of 300 chars}}      consignee_address           Consignee's Address
  * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_name              Consignee's Name
  * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_contact_number    Consignee's Contact Number

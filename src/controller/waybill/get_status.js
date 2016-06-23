@@ -7,15 +7,16 @@ var base = require('../base_controller');
 var repoPath = '../../repository/';
 
 /**
- * @api {get} waybill/details/:waybill_number Get Waybill Status
+ * @api {get} waybill/details/<waybill> Get Waybill Status
  * @apiDescription Endpoint for retrieving a particular waybill's status
  * @apiName getWaybillStatus
  * @apiGroup Waybill
  * @apiVersion 1.0.0
  * 
  * @apiExample {curl} Example usage:
- *     curl -i http://localhost/user/4711
- * 
+ *     curl -X GET https://sandbox-express.yilinker.com/waybill/details/<waybill> \
+ *          -u <client_key>:<client_secret>
+ *     
  * @apiParam    (Query) {String}     waybill_number         Package's Waybill Number
  *
  * @apiSuccess  (Success 200)   {String}     status                 State of response
