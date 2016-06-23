@@ -66,15 +66,16 @@ var errorCodes = module.exports.errorCodes = {
     amount_to_collect: {
         required: '4010',
         maxLength: '4011',
-        string: '4011'
+        number: '4011'
     },
     reference_number: {
-        maxLength: '5001'
+        maxLength: '5001',
+        string: '5001'
     },
     declared_value: {
         required: '6000',
         maxLength: '6001',
-        string: '6001'
+        number: '6001'
     },
     package_description: {
         required: '7000',
@@ -101,8 +102,13 @@ module.exports.form = new Checkit({
     ],
     declared_value: [
         { rule: 'required',         message: errorCodes.declared_value.required             },
-        { rule: 'maxLength:12',     message: errorCodes.declared_value.maxLength            },
-        { rule: 'string',           message: errorCodes.declared_value.string               }
+        { rule: function(val){
+            var dec = (val + '').split('.');
+            if(dec[0].length > 11 || (dec[1] || '').length > 2){
+                throw new Error(errorCodes.declared_value.maxLength);
+            }
+        }                                                                                   },
+        { rule: 'number',           message: errorCodes.declared_value.number               }
     ],
     is_cod: [
         { rule: 'required',         message: errorCodes.is_cod.required                     },
@@ -115,7 +121,8 @@ module.exports.form = new Checkit({
     ]
 })
 .maybe({reference_number: [
-        { rule: 'maxLength:50',     message: errorCodes.reference_number.maxLength          }
+        { rule: 'maxLength:50',     message: errorCodes.reference_number.maxLength          },
+        { rule: 'string',           message: errorCodes.reference_number.string             }
     ]}, 
     function(form){
         return form.hasOwnProperty('reference_number');
@@ -130,8 +137,13 @@ module.exports.form = new Checkit({
 })
 .maybe({amount_to_collect: [
         { rule: 'required',         message: errorCodes.amount_to_collect.required          },
-        { rule: 'maxLength:12',     message: errorCodes.amount_to_collect.maxLength         },
-        { rule: 'string',           message: errorCodes.amount_to_collect.string            }
+        { rule: function(val){
+            var dec = (val + '').split('.');
+            if(dec[0].length > 11 || (dec[1] || '').length > 2){
+                throw new Error(errorCodes.amount_to_collect.maxLength);
+            }
+        }                                                                                   },
+        { rule: 'number',           message: errorCodes.amount_to_collect.number            }
     ]}, 
     function(form){
         return form.is_cod;
