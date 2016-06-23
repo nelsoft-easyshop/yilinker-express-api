@@ -1,0 +1,14 @@
+{
+    "name": "Yilinker Express API",
+    "title": "Yilinker Express API Documentation",
+    "url": "http://sandbox-express.yilinker.com/",
+    "version": "1.0.0",
+    "header": {
+        "title": "Introduction",
+        "filename": "../doc/content/header.md"
+    },
+    "footer": {
+        "title": "Appendices",
+        "filename": "../doc/content/footer.md"
+    }
+}

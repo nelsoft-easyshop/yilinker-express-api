@@ -8,5 +8,7 @@ app/config/parameters.js
 npm-debug.log
 app/logs
 
-# api doc
-doc/
+# auto generated doc
+doc/template/api_data.json
+doc/template/api_project.json
+doc/template/api_project.js
