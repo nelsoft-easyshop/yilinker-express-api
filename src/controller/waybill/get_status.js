@@ -30,9 +30,9 @@ var repoPath = '../../repository/';
  *     {
  *         "status": "successful",
  *         "data": {
- *             "waybill_number": "sample_waybill",
- *             "status_name": "sample status name",
- *             "status_value": 123
+ *             "waybill_number": "WBEPH000100000000000",
+ *             "status_name": "Received by Recipient",
+ *             "status_value": 90
  *         },
  *         message: ""
  *     }

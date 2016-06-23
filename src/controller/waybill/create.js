@@ -9,12 +9,12 @@ var consumerAddressRepo = require(repoPath + '/consumer_address');
 var clientApiSettingRepo = require(repoPath + '/client_api_setting');
 
 /**
- * @api {post} waybill/create Create Package Waybill
+ * @api {post} waybill/create Create Waybill
  * @apiDescription Endpoint for creating a waybill
  * @apiName waybillCreate
  * @apiGroup Waybill
  * @apiVersion 1.0.0
- * 
+ 
  * @apiExample {curl} Example usage:
  *     curl -X POST https://sandbox-express.yilinker.com/waybill/create \
  *          -H "Content-Type: application/json" \
@@ -24,20 +24,22 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  *              "consignee_name": "Alan Turing", 
  *              "consignee_contact_number": "639000000000", 
  *              "is_cod": true, 
- *              "declared_value": "123.45", 
+ *              "declared_value": 123.45, 
  *              "package_description": "Smaug 1:1 Replica", 
- *              "amount_to_collect": "678.90" 
+ *              "amount_to_collect": 678.90 
  *          }'
- *     
- * @apiParam    (Parameters)    {String{max of 300 chars}}      consignee_address           Consignee's Address
- * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_name              Consignee's Name
- * @apiParam    (Parameters)    {String{max of 150 chars}}      consignee_contact_number    Consignee's Contact Number
- * @apiParam    (Parameters)    {String{max of 12 chars?}}      declared_value              Shipment's Value
- * @apiParam    (Parameters)    {String{max of 500 chars}}      package_description         Brief Description of Package
- * @apiParam    (Parameters)    {Boolean=true, false}           is_cod                      Is Package to be tagged as Cash On Delivery?
- * @apiParam    (Parameters)    {String{max of 12 chars?}}      [amount_to_collect]         Amount to collect (Required if COD)
- * @apiParam    (Parameters)    {String{max of 50 chars}}       [reference_number]          Any value that would be binded to this waybill
  *
+ * 
+ * @apiParam    (Parameters)    {String{max of 300 chars}}                          consignee_address           Consignee's Address
+ * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_name              Consignee's Name
+ * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_contact_number    Consignee's Contact Number
+ * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     declared_value              Shipment's Value
+ * @apiParam    (Parameters)    {String{max of 500 chars}}                          package_description         Brief Description of Package
+ * @apiParam    (Parameters)    {Boolean=true, false}                               is_cod                      Is Package to be tagged as Cash On Delivery?
+ * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     [amount_to_collect]         Amount to collect (Required if COD)
+ * @apiParam    (Parameters)    {String{max of 50 chars}}                           [reference_number]          Any value that would be binded to this waybill
+ *
+ * 
  * @apiSuccess  (Success 200)   {String}                        status                      State of response
  * @apiSuccess  (Success 200)   {Object}                        data                        Data object
  * @apiSuccess  (Success 200)   {String}                        data.waybill_number         Waybill Number assigned by the system
@@ -47,7 +49,7 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  *     {
  *         "status": "successful",
  *         "data": {
- *             "waybill_number": "sample_waybill",
+ *             "waybill_number": "WBEPH000100000000000",
  *         },
  *         message: ""
  *     }
@@ -63,8 +65,8 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  *       "status": "failed",
  *       "data": {
  *           "errors": [
- *               "123",
- *               "456"
+ *               "4000",
+ *               "7001"
  *           ]
  *       },
  *       "message": "Malformed Request Parameters"
