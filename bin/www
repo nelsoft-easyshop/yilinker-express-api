@@ -75,3 +75,19 @@ function onError(error) {
             throw error;
     }
 }
+
+/**
+ * Enable graceful shutdown
+ */
+var gracefulShutdown = function(){
+    console.log("Gracefully shutting down...");
+    server.close(function(){
+        process.exit();
+    });
+    
+    setTimeout(function(){
+        process.exit();
+    }, 10*1000);
+}
+
+process.on('SIGINT', gracefulShutdown);
