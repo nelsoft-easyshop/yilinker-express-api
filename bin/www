@@ -88,6 +88,6 @@ var gracefulShutdown = function(){
     setTimeout(function(){
         process.exit();
     }, 10*1000);
-}
+};
 
 process.on('SIGINT', gracefulShutdown);
