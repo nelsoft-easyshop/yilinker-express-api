@@ -7,10 +7,9 @@
 var express = require('express');
 var app = express();
 
-var morgan = require('morgan');
+var winston = require('winston');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
-var parameters = require('./app/config/parameters');
 
 /**
  * Uncomment if we'll allow AJAX-ing to this app
@@ -24,34 +23,28 @@ var parameters = require('./app/config/parameters');
 // });
 
 /**
- * Setup logging according to env
+ * Setup winston
  */
+winston.add(require('winston-daily-rotate-file'), {
+    timestamp: function() {
+        return require('dateformat')(new Date(), "yyyy-mm-dd HH:MM:ss");
+    },
+    filename:  __dirname + '/app/logs/log',
+    handleExceptions: true,
+    humanReadableUnhandledException: true,
+    json: false
+})
+.remove(winston.transports.Console)
+.on('error', function(err){
+    winston.error(err);
+});
 
-if(app.get('env') != 'production'){
-    // just log to console
-    app.use(morgan('dev'));
-}
-else{
-    // https://www.npmjs.com/package/morgan#log-file-rotation
-    // rotate log files in app/logs
-    var FileStreamRotator = require('file-stream-rotator');
-    var fs = require('fs');
-    var logDirectory = __dirname + '/app/logs';
-    var accessLogStream = FileStreamRotator.getStream({
-        date_format: 'YYYYMMDD',
-        filename: logDirectory + '/access-%DATE%.log',
-        frequency: 'daily',
-        verbose: false
-    });
-
-    // setup the logger (Apache-like)
-    app.use(morgan('combined', {stream: accessLogStream}))
-}
+winston.level = 'error';
+winston.exitOnError = false;
 
 /**
  * Pre cache DB connection
  */
-
 require('./src/common/db');
 
 /**
@@ -65,7 +58,7 @@ app.use(bodyParser.json());
 // use helmet
 // https://www.npmjs.com/package/helmet#top-level-helmet
 app.use(helmet());
-app.disable('etag')
+app.disable('etag');
 
 /**
  * Routes
@@ -84,6 +77,7 @@ app.use(function(req, res, next){
     res
         .status(404)
         .json({
+            status: "failed",
             message: 'Invalid Endpoint'
         });
 });
@@ -91,18 +85,19 @@ app.use(function(req, res, next){
 // if not production, dump trace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-        console.log(err);
-        // require('debug')('Express:app.js')(err);
+        console.log(err.stack);
+        next(err);
     });
 }
-else{
-    app.use(function(err, req, res, next) {
-        res
-            .status(err.status || 500)
-            .json({
-                message: 'Internal Server Error'
-            });
-    });
-}
+
+app.use(function(err, req, res, next) {
+    winston.log('error', "%s", err.stack || err);
+    res
+        .status(err.status || 500)
+        .json({
+            status: "failed",
+            message: "Internal Server Error"
+        });
+});
 
 module.exports = app;

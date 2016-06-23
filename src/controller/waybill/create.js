@@ -65,12 +65,12 @@ module.exports = function(req, res, next){
     .run(req.body)
     .then(function(validatedData){
         // generate defaults
-        packageRepo
+        return packageRepo
         .getPackageDefaultValues()
         .then(function(defaultValues){
             var packageData = defaultValues;
             // create address
-            packageRepo.createConsigneePackageAddress(
+            return packageRepo.createConsigneePackageAddress(
                 req.consumerId,
                 {
                     name: validatedData.consignee_name,
@@ -125,5 +125,8 @@ module.exports = function(req, res, next){
                 }
             )
         );
+    })
+    .catch(function(err){
+        next(err);
     });
 };

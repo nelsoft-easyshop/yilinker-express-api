@@ -1,23 +1,26 @@
 {
   "name": "yilinker-express-api",
-  "version": "0.1.0",
-  "description": "Engine humming behind the Express API",
+  "version": "1.0.0",
+  "description": "The engine humming behind the Yilinker Express API",
   "main": "bin/www",
   "scripts": {
-    "test": "mocha -R spec test/ --recursive"
+    "test": "mocha -R spec test/ --recursive && jshint app/ src/ app.js bin/www",
+    "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "basic-auth": "^1.0.4",
     "body-parser": "^1.15.1",
     "bookshelf": "^0.9.5",
     "checkit": "^0.6.0",
+    "dateformat": "^1.0.12",
     "express": "^4.13.4",
-    "file-stream-rotator": "0.0.6",
     "helmet": "^2.1.0",
     "knex": "^0.11.5",
-    "morgan": "^1.7.0",
-    "mysql": "^2.11.0"
+    "mysql": "^2.11.0",
+    "winston": "^2.2.0",
+    "winston-daily-rotate-file": "^1.1.4"
   },
   "devDependencies": {
     "apidoc": "^0.16.1",
@@ -33,18 +36,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/nelsoft-easyshop/yilinker-express-api.git"
-  },
-  "apidoc": {
-    "title": "dat browser title",
-    "url": "google.com",
-    "sampleUrl": "google.com",
-    "header": {
-      "title": "header title",
-      "filename": "./template/header.md"
-    },
-    "footer": {
-      "title": "footer title",
-      "filename": "./template/footer.md"
-    }
   }
 }
