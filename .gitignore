@@ -6,7 +6,6 @@ app/config/parameters.js
 
 # logs
 npm-debug.log
-app/logs
 
 # auto generated doc
 doc/template/api_data.json
