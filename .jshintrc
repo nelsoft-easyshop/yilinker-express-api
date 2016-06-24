@@ -1,8 +1,11 @@
 {
-  "node": true,
-  "curly": true,
-  "eqeqeq": true,
-  "undef": true,
-  "nocomma": true,
-  "unused": "vars"
+  "node"        : true  ,
+  "curly"       : true  ,
+  "eqeqeq"      : true  ,
+  "undef"       : true  ,
+  "nocomma"     : true  ,
+  "unused"      : "vars",
+  "mocha"       : true  ,
+  "esversion"   : 6     ,
+  "expr"        : true
 }

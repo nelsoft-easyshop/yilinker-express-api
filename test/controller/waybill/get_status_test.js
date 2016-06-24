@@ -51,7 +51,7 @@ describe('waybill get details test cases', function(){
             expect(resSpy.status).to.have.been.calledWith(notFoundCode);
             expect(resSpy.json).to.have.calledWithExactly(notFoundResponse);
         });
-    })
+    });
 
     // non-existent / not owned waybill
     describe('non existent waybill', function(){

@@ -4,7 +4,7 @@
   "description": "The engine humming behind the Yilinker Express API",
   "main": "bin/www",
   "scripts": {
-    "test": "mocha -R spec test/ --recursive && jshint app/ src/ app.js bin/www",
+    "test": "mocha -R spec test/ --recursive && jshint app/ src/ bin/www test/ app.js",
     "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/"
   },
   "author": "",
