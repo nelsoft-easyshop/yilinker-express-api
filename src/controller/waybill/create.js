@@ -111,6 +111,13 @@ module.exports = function(req, res, next){
                     packageData.package_description = validatedData.package_description;
                     packageData.charge_to = req.clientId;
                     return packageRepo.createPackage(packageData);
+                })
+                .catch(function(err){
+                    if(err.code === 'ER_BAD_NULL_ERROR'){
+                        err = new checkit.Error();
+                        err.errors = { missing_shipper_addr: { message: '8000' } };
+                    }
+                    throw err;
                 });
             })
             .then(function(packageObject){

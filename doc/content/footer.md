@@ -87,6 +87,11 @@
             <td>Invalid Package Description</td>
             <td>The package description either not a string or is above max chars</td>
         </tr>
+        <tr>
+            <td>8000</td>
+            <td>Invalid Shipper Address</td>
+            <td>Default Shipper Address has not yet been set in Client API Settings</td>
+        </tr>
     </tbody>
 </table>
 
