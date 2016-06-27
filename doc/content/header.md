@@ -31,3 +31,12 @@ For example:
 Say we have `Aladdin` as the `client_key` and `Seven Dwarves` as the `client_secret`. The header is formed as follows:
 
 `Authorization: Basic QWxhZGRpbjpTZXZlbiBEd2FydmVz`
+
+## Default Shipper Address
+
+The client is required to set the `Default Shipper Address` API setting which can be found under the API header on the 
+left navigation bar of the Client Portal Dashboard. This would be taken as the Shipper's address on all packages that the client will
+send under the API Framework.
+
+A tutorial on how to set the default shipper address can be found [here](https://i.imgur.com/ozrAcKU.gifv). If the client does not have an address yet,
+a tutorial on how to generate an address can be found [here](https://i.imgur.com/eW7HObI.gifv).

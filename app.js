@@ -77,7 +77,7 @@ app.use(function(req, res, next){
     res
         .status(404)
         .json({
-            status: "failed",
+            status: 'failed',
             message: 'Invalid Endpoint'
         });
 });
@@ -95,8 +95,8 @@ app.use(function(err, req, res, next) {
     res
         .status(err.status || 500)
         .json({
-            status: "failed",
-            message: "Internal Server Error"
+            status: 'failed',
+            message: 'Internal Server Error'
         });
 });
 
