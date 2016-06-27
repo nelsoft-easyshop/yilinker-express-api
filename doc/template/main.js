@@ -228,6 +228,9 @@ require([
     // remove loader
     $('#loader').remove();
 
+    // show header
+    $('#header').show();
+
     // render sidenav
     var fields = {
         nav: nav
