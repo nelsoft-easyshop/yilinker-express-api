@@ -70,16 +70,19 @@ function onError(error) {
 
 /**
  * Enable graceful shutdown
+ * Drain connection pool created by Knex then close Node server
  */
 var gracefulShutdown = function(){
-    console.log("Gracefully shutting down...");
-    server.close(function(){
-        process.exit();
+    require('../src/common/db').knex.destroy(function(){
+        console.log("Gracefully shutting down...");
+        server.close(function(){
+            process.exit();
+        });
+
+        setTimeout(function(){
+            process.exit();
+        }, 10*1000);
     });
-    
-    setTimeout(function(){
-        process.exit();
-    }, 10*1000);
 };
 
 process.on('SIGINT', gracefulShutdown);
