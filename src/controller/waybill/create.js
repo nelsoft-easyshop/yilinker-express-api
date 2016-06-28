@@ -112,7 +112,7 @@ module.exports = function(req, res, next){
                     packageData.charge_to = req.clientId;
                     return packageRepo.createPackage(packageData);
                 })
-                .catch(function(e){ return e.code === 'ER_BAD_NULL_ERROR' }, function(err){
+                .catch(function(e){ return e.code === 'ER_BAD_NULL_ERROR'; }, function(err){
                     err = new checkit.Error();
                     err.errors = { missing_shipper_addr: { message: '8000' } };
                     throw err;
