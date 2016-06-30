@@ -1,12 +1,14 @@
-var parameters = require('../../app/config/parameters');
+'use strict';
+
+var params = require('../../app/config/parameters').database;
 
 var knex = require('knex')({
     client: 'mysql',
     connection: {
-        host : parameters.database_host,
-        user : parameters.database_user,
-        password : parameters.database_password,
-        database : parameters.database_name
+        host : params.host,
+        user : params.user,
+        password : params.password,
+        database : params.schema
     }
 });
 
