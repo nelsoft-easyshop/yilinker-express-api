@@ -61,9 +61,14 @@ app.use(helmet());
 app.disable('etag');
 
 /**
- * Routes
+ * Version 1 Route
  */
-app.use('/waybill', require('./app/config/routing/waybill'));
+app.use(
+    '/v1', 
+    require('./app/middleware/authentication/client_basic_auth'), 
+    require('./app/config/routing/v1')
+);
+
 
 /**
  * Error related middlewares

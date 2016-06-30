@@ -1,6 +1,6 @@
 'use strict';
 
-var asyncWrapper = require('../base_test').asyncWrapper;
+var asyncWrapper = require('../../base_test').asyncWrapper;
 var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
@@ -9,8 +9,8 @@ var expect = chai.expect;
 chai.use(sinonChai);
 
 describe('client access middleware test cases', function(){
-    var accessClientPath = '../../app/middleware/client_access';
-    var clientRepoPath = '../../src/repository/client';
+    var accessClientPath = '../../../app/middleware/authentication/client_basic_auth';
+    var clientRepoPath = '../../../src/repository/client';
     var basicAuth = 'basic-auth';
     var reqMock = {};
     var nextSpy = null;

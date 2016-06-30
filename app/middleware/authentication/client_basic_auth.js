@@ -1,6 +1,6 @@
 'use strict';
 
-var clientRepo = require('../../src/repository/client');
+var clientRepo = require('../../../src/repository/client');
 var auth = require('basic-auth');
 
 /**
