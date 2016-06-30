@@ -1,12 +1,14 @@
 'use strict';
 
+var repoPath = '../../repository/';
 var base = require('../base_controller');
 var checkit = require('checkit');
-var repoPath = '../../repository/';
-var waybillCreateForm = require('../../form/waybill/create_waybill_form').form;
-var packageRepo = require(repoPath + '/package');
-var consumerAddressRepo = require(repoPath + '/consumer_address');
-var clientApiSettingRepo = require(repoPath + '/client_api_setting');
+var clientApiSettingRepo = require(repoPath + 'client_api_setting');
+var waybillQueue = require('../../common/queue').waybillQueue;
+
+var formObject = require('../../form/waybill/create_waybill_form');
+var waybillCreateForm = formObject.form;
+var waybillErrorCodes = formObject.errorCodes;
 
 /**
  * @api {post} waybill/create Create Waybill
@@ -16,7 +18,7 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  * @apiVersion 1.0.0
  
  * @apiExample {curl} Example usage:
- *     curl -X POST https://sandbox-express.yilinker.com/waybill/create \
+ *     curl -X POST https://sandbox-express.yilinker.com/v1/waybill/create \
  *          -H "Content-Type: application/json" \
  *          -u <client_key>:<client_secret> \
  *          -d '{ 
@@ -26,7 +28,8 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  *              "is_cod": true, 
  *              "declared_value": 123.45, 
  *              "package_description": "Smaug 1:1 Replica", 
- *              "amount_to_collect": 678.90 
+ *              "amount_to_collect": 678.90,
+ *              "webhook_url": https://example.com/waybill/receive 
  *          }'
  *
  * 
@@ -36,22 +39,36 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     declared_value              Shipment's Value
  * @apiParam    (Parameters)    {String{max of 500 chars}}                          package_description         Brief Description of Package
  * @apiParam    (Parameters)    {Boolean=true, false}                               is_cod                      Is Package to be tagged as Cash On Delivery?
+ * @apiParam    (Parameters)    {String{max of 300 chars}}                          [webhook_url]               A valid URL where the details of generated waybill should be sent
  * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     [amount_to_collect]         Amount to collect (Required if COD)
  * @apiParam    (Parameters)    {String{max of 50 chars}}                           [reference_number]          Any value that would be binded to this waybill
  *
+ * @apiParam    (Webhook)       {String}                                            waybill_number              Waybill Number
+ * @apiParam    (Webhook)       {String}                                            reference_number            Reference number binded on request
+ * @apiParam    (Webhook)       {String}                                            waybill_status_name         Initial Waybill Status Name
+ * @apiParam    (Webhook)       {Number}                                            waybill_status_value        Initial Waybill Status Value
  * 
- * @apiSuccess  (Success 200)   {String}                        status                      State of response
- * @apiSuccess  (Success 200)   {Object}                        data                        Data object
- * @apiSuccess  (Success 200)   {String}                        data.waybill_number         Waybill Number assigned by the system
+ * @apiSuccess  (Success)       {String}                                            status                      State of response
+ * @apiSuccess  (Success)       {Object}                                            data                        Data object
  *
- * @apiSuccessExample Success-Response:
+ * @apiSuccessExample Success (Response):
  *     HTTP/1.1 200 OK
  *     {
  *         "status": "successful",
+ *         "data": null,
+ *         message: ""
+ *     }
+ *
+ * @apiSuccessExample Webhook (Request):
+ *     POST {postback_url} HTTP/1.1
+ *     X-YLX-Signature: sample_hash
+ *     {
  *         "data": {
  *             "waybill_number": "WBEPH000100000000000",
- *         },
- *         message: ""
+ *             "reference_number": {reference_number},
+ *             "waybill_status_name": "For Verification",
+ *             "waybill_status_value": 15
+ *         }
  *     }
  *
  * @apiError    (Error 400)     {String}                        status                      State of response      
@@ -74,65 +91,32 @@ var clientApiSettingRepo = require(repoPath + '/client_api_setting');
  * 
  */
 module.exports = function(req, res, next){
-    waybillCreateForm
+    return waybillCreateForm
     .run(req.body)
     .then(function(validatedData){
-        // generate defaults
-        return packageRepo
-        .getPackageDefaultValues()
-        .then(function(defaultValues){
-            var packageData = defaultValues;
-            // create address
-            return packageRepo.createConsigneePackageAddress(
-                req.consumerId,
-                {
-                    name: validatedData.consignee_name,
-                    contactNumber: validatedData.consignee_contact_number,
-                    address: validatedData.consignee_address
-                }
-            )
-            .then(function(grouping){
-                return consumerAddressRepo.getAddressByConsumerAddress(
-                    grouping.consumer_address_id
-                );
-            })
-            .then(function(consumerAddress){
-                return clientApiSettingRepo
-                .getClientAPIDefaultAddress(req.clientId)
-                .then(function(client){
-                    // finish package creation here
-                    packageData.sender_address_id = client.default_address_id;
-                    packageData.sender_consumer_id = req.consumerId;
-                    packageData.recipient_address_id = consumerAddress.address_id;
-                    packageData.reference_number_1 = validatedData.reference_number || '';
-                    packageData.cod_is_for_collection = validatedData.is_cod;
-                    packageData.amount_to_collect = validatedData.amount_to_collect || '0.00';
-                    packageData.declared_value = validatedData.declared_value;
-                    packageData.package_description = validatedData.package_description;
-                    packageData.charge_to = req.clientId;
-                    return packageRepo.createPackage(packageData);
-                })
-                .catch(function(e){ return e.code === 'ER_BAD_NULL_ERROR'; }, function(err){
-                    err = new checkit.Error();
-                    err.errors = { missing_shipper_addr: { message: '8000' } };
-                    throw err;
-                });
-            })
-            .then(function(packageObject){
-                // update waybill number here
-                return packageRepo.updateWaybillNumber(packageObject.id);
-            })
-            .then(function(packageObject){
-                res.json(
-                    base.response(
-                        res,
-                        {
-                            waybill_number: packageObject.waybill_number
-                        }
-                    )
-                );
-            });
+        return clientApiSettingRepo
+        .getClientAPISettings(req.clientId)
+        .then(function(settings){
+            if(settings.default_address_id){
+                // attach consumer id
+                settings.consumer_id = req.consumerId;
+
+                // queue job here
+                waybillQueue.add(Object.assign({}, settings, validatedData));
+                return Promise.resolve();
+            }
+            throw new Error(waybillErrorCodes.api_address.required);
         });
+    })
+    .then(function(){
+        res.json(
+            base.response(res)
+        );
+    })
+    .catch(function(e){ return e.message === waybillErrorCodes.api_address.required; }, function(err){
+        err = new checkit.Error();
+        err.errors = { missing_shipper_addr: { message: waybillErrorCodes.api_address.required } };
+        throw err;
     })
     .catch(checkit.Error, function(err){
         res.json(

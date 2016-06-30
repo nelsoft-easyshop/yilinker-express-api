@@ -14,7 +14,7 @@ var repoPath = '../../repository/';
  * @apiVersion 1.0.0
  * 
  * @apiExample {curl} Example usage:
- *     curl -X GET https://sandbox-express.yilinker.com/waybill/details/<waybill> \
+ *     curl -X GET https://sandbox-express.yilinker.com/v1/waybill/details/<waybill> \
  *          -u <client_key>:<client_secret>
  *     
  * @apiParam    (Query) {String}     waybill_number         Package's Waybill Number
@@ -54,7 +54,7 @@ module.exports = function(req, res, next){
     var waybill = req.params.waybill;
     if(waybill){
         waybill = waybill.trim();
-        packageRepo
+        return packageRepo
             .getWaybillStatus(waybill, req.consumerId)
             .then(function(data){
                 res.json(base.response(

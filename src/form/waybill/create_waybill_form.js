@@ -81,6 +81,15 @@ var errorCodes = module.exports.errorCodes = {
         required: '7000',
         maxLength: '7001',
         string: '7001'
+    },
+    api_address: {
+        required: '8000'
+    },
+    webhook_url: {
+        required: '9000',
+        maxLength: '9001',
+        string: '9001',
+        url: '9001'
     }
 };
 
@@ -134,6 +143,15 @@ module.exports.form = new Checkit({
     ]}, 
     function(form){
         return form.hasOwnProperty('shipper_address');
+})
+.maybe({webhook_url: [
+        { rule: 'required',         message: errorCodes.webhook_url.required                },
+        { rule: 'maxLength:300',    message: errorCodes.webhook_url.maxLength               },
+        { rule: 'string',           message: errorCodes.webhook_url.string                  },  
+        { rule: 'url',              message: errorCodes.webhook_url.url                     }
+    ]}, 
+    function(form){
+        return form.hasOwnProperty('webhook_url');
 })
 .maybe({amount_to_collect: [
         { rule: 'required',         message: errorCodes.amount_to_collect.required          },

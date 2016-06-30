@@ -253,6 +253,66 @@ describe('waybill create form test cases', function(){
         });
     });
 
+    describe('webhook url test cases', function(){
+        it('should not fail on missing key', function(){
+            return form
+                .run({})
+                .catch(function(data){
+                    expect(data.errors).to.not.contain.keys('webhook_url');
+                });
+        });
+
+        it('should fail on empty webhook url', function(){
+            return form
+                .run({
+                    webhook_url: ''
+                })
+                .catch(function(data){
+                    doesContainHelper(data, errorCodes.webhook_url.required);
+                });
+        });
+
+        it('should fail on above max char', function(){
+            return form
+                .run({
+                    webhook_url: 'a'.repeat(301)
+                })
+                .catch(function(data){
+                    doesContainHelper(data, errorCodes.webhook_url.maxLength);
+                });
+        });
+
+        it('should fail on a non char', function(){
+            return form
+                .run({
+                    webhook_url: 123
+                })
+                .catch(function(data){
+                    doesContainHelper(data, errorCodes.webhook_url.string);
+                });
+        });
+
+        it('should fail on an invalid webhook url', function(){
+            return form
+                .run({
+                    webhook_url: 'not a url obviously'
+                })
+                .catch(function(data){
+                    doesContainHelper(data, errorCodes.webhook_url.url);
+                });
+        });
+
+        it('should succeed on a valid webhook url', function(){
+            return form
+                .run({
+                    webhook_url: 'https://google.com/hook'
+                })
+                .catch(function(data){
+                    expect(data.errors).to.not.contain.keys('webhook_url');
+                });
+        });
+    });
+
     describe('reference number test cases', function(){
         it('should fail on above max char', function(){
             return form

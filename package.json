@@ -13,6 +13,7 @@
     "basic-auth": "^1.0.4",
     "body-parser": "^1.15.1",
     "bookshelf": "^0.9.5",
+    "bull": "^1.0.0",
     "checkit": "^0.6.0",
     "dateformat": "^1.0.12",
     "express": "^4.13.4",

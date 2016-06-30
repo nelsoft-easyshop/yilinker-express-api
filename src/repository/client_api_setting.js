@@ -17,3 +17,13 @@ module.exports.getClientAPIDefaultAddress = function(clientId){
         return client.toJSON();
     });
 };
+
+module.exports.getClientAPISettings = function(clientId){
+    return ClientApiSetting.forge({
+        client_id: clientId
+    })
+    .fetch()
+    .then(function(clientSettings){
+        return clientSettings.toJSON();
+    });
+};
