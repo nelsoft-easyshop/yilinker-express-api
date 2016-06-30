@@ -1,7 +1,7 @@
 {
     "name": "Yilinker Express API",
     "title": "Yilinker Express API Documentation",
-    "url": "https://sandbox-express.yilinker.com/",
+    "url": "https://sandbox-express.yilinker.com/v1/",
     "version": "1.0.0",
     "header": {
         "title": "Introduction",

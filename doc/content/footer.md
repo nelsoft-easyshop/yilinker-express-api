@@ -167,3 +167,9 @@
         </tr>
     </tbody>
 </table>
+
+# History
+
+## 1.0.0 / 07-01-2016
+
+    * Initial Release
