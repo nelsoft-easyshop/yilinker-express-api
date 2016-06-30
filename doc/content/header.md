@@ -61,7 +61,7 @@ The API Framework incorporates an HMAC-SHA-256 hexdigest on every payload which 
 
 
 The client first must [set the Webhook Secret Token](https://i.imgur.com/3ytSXdS.gifv) option on the Client API Setting. When the token is set, the Express API will use it to create the hash signature with each payload.
-This hash signature is passed along with every request in the headers as `X-YLX-Signature`.
+This hash signature is passed along with every request in the headers as `x-ylx-signature`.
 
 
 The task of the client then is to compute a hash using the Webhook Secret Token provided and ensure that the hash from the Express API payload matches.
