@@ -1,6 +1,5 @@
 'use strict';
 
-var util = require('util');
 var Queue = require('bull');
 var params = require('../../app/config/parameters').redis;
 
