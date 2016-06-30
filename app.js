@@ -48,6 +48,11 @@ winston.exitOnError = false;
 require('./src/common/db');
 
 /**
+ * Pre cache redis connection
+ */
+require('./src/common/queue');
+
+/**
  * Middlewares
  */
 
