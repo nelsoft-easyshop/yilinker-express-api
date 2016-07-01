@@ -5,6 +5,7 @@
   "main": "bin/www",
   "scripts": {
     "test": "mocha -R spec test/ --recursive && jshint app/ src/ bin/www test/ app.js",
+    "postinstall" : "bin/update_config.js",
     "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/"
   },
   "author": "",
@@ -16,10 +17,12 @@
     "bull": "^1.0.0",
     "checkit": "^0.6.0",
     "dateformat": "^1.0.12",
+    "deep-diff": "^0.3.4",
     "express": "^4.13.4",
     "helmet": "^2.1.0",
     "knex": "^0.11.5",
     "mysql": "^2.11.0",
+    "readline-sync": "^1.4.4",
     "winston": "^2.2.0",
     "winston-daily-rotate-file": "^1.1.4"
   },

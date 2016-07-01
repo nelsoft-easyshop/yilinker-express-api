@@ -2,7 +2,7 @@
 node_modules/
 
 # params
-app/config/parameters.js
+app/config/parameters.json
 
 # logs
 npm-debug.log

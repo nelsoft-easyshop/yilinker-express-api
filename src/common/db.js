@@ -1,6 +1,6 @@
 'use strict';
 
-var params = require('../../app/config/parameters').database;
+var params = require('../../app/config/parameters.json').database;
 
 var knex = require('knex')({
     client: 'mysql',
