@@ -5,7 +5,7 @@
   "main": "bin/www",
   "scripts": {
     "test": "mocha -R spec test/ --recursive && jshint app/ src/ bin/www test/ app.js",
-    "postinstall" : "bin/update_config.js",
+    "postinstall": "bin/update_config.js",
     "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/"
   },
   "author": "",
@@ -35,7 +35,9 @@
     "nodemon": "^1.9.2",
     "proxyquire": "^1.7.9",
     "sinon": "^1.17.4",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "supertest": "^1.2.0",
+    "supertest-as-promised": "^3.2.0"
   },
   "repository": {
     "type": "git",
