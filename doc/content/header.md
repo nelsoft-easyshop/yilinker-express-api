@@ -64,7 +64,42 @@ The client first must [set the Callback Secret Token](https://i.imgur.com/3ytSXd
 This hash signature is passed along with every request in the headers as `X-YLX-Signature`.
 
 
-The task of the client then is to compute a hash using the Callback Secret Token provided and ensure that the hash from the Express API payload matches.
+Sample code of signature generation is as follows:
+
+
+```javascript
+var hmacSig = crypto
+    .createHmac('sha256', data.callback_secret || '')
+    .update(JSON.stringify(payload))
+    .digest('hex');
+```
+
+
+The task of the client then is to compute a hash using the Callback Secret Token provided and the JSON string equivalent of the body of the payload and ensure 
+that the hash from the header matches. For example:
+
+
+Say we are given the following callback result:
+
+```
+'X-YLX-Signature': '919f5fa05a7f135b15b885cd3a214a50bbecbaa647528e99c0f65d5b1a84b3f2'
+Body: { 
+    waybill_number: 'WBEPH000100000014161',
+    reference_number: '',
+    waybill_status_name: 'For verification',
+    waybill_status_value: 15 
+}
+```
+
+
+First step is to stringify the JSON object which would yield:
+
+
+`{"waybill_number":"WBEPH000100000014161","reference_number":"","waybill_status_name":"For verification","waybill_status_value":15}`
+
+
+Then generate the hash using the Callback secret and the json string above with the client's preferred cryto library. After which, compare the resultant hash with the
+hash present in the header using a constant time comparison algorithm to avoid [Timing attacks](https://en.wikipedia.org/wiki/Timing_attack). If the hashes match, it's a legitimate request.
 
 
 If ever the client forgets to set the Callback Secret Token and tries to subscribe to the Callback, the empty string `''` will be used as the key for the hash.
