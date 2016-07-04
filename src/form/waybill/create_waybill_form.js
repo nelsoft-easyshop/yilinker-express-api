@@ -24,6 +24,11 @@ var errorCodes = module.exports.errorCodes = {
             required: '1010',
             maxLength: '1011',
             string: '1012'
+        },
+        street_address: {
+            required: '1013',
+            maxLength: '1014',
+            string: '1015',
         }
     },
     consignee_name: {
@@ -62,7 +67,7 @@ var errorCodes = module.exports.errorCodes = {
     api_address: {
         required: '8000'
     },
-    webhook_url: {
+    callback_url: {
         required: '9000',
         maxLength: '9001',
         string: '9002',
@@ -73,26 +78,6 @@ var errorCodes = module.exports.errorCodes = {
 module.exports.form = new Checkit({
     consignee_address: [
         { rule: 'required',         message: errorCodes.consignee_address.required                      }
-    ],
-    "consignee_address.complete_address": [
-        { rule: 'required',         message: errorCodes.consignee_address.complete_address.required     },
-        { rule: 'string',           message: errorCodes.consignee_address.complete_address.string       },
-        { rule: 'maxLength:300',    message: errorCodes.consignee_address.complete_address.maxLength    }
-    ],
-    "consignee_address.province": [
-        { rule: 'required',         message: errorCodes.consignee_address.province.required             },
-        { rule: 'string',           message: errorCodes.consignee_address.province.string               },
-        { rule: 'maxLength:50',     message: errorCodes.consignee_address.province.maxLength            }
-    ],
-    "consignee_address.city": [
-        { rule: 'required',         message: errorCodes.consignee_address.city.required                 },
-        { rule: 'string',           message: errorCodes.consignee_address.city.string                   },
-        { rule: 'maxLength:50',     message: errorCodes.consignee_address.city.maxLength                }
-    ],
-    "consignee_address.barangay": [
-        { rule: 'required',         message: errorCodes.consignee_address.barangay.required             },
-        { rule: 'string',           message: errorCodes.consignee_address.barangay.string               },
-        { rule: 'maxLength:50',     message: errorCodes.consignee_address.barangay.maxLength            }
     ],
     consignee_name: [
         { rule: 'required',         message: errorCodes.consignee_name.required                         },
@@ -131,14 +116,14 @@ module.exports.form = new Checkit({
     function(form){
         return form.hasOwnProperty('reference_number');
 })
-.maybe({webhook_url: [
-        { rule: 'required',         message: errorCodes.webhook_url.required                            },
-        { rule: 'string',           message: errorCodes.webhook_url.string                              },  
-        { rule: 'maxLength:300',    message: errorCodes.webhook_url.maxLength                           },
-        { rule: 'url',              message: errorCodes.webhook_url.url                                 }
+.maybe({callback_url: [
+        { rule: 'required',         message: errorCodes.callback_url.required                            },
+        { rule: 'string',           message: errorCodes.callback_url.string                              },  
+        { rule: 'maxLength:300',    message: errorCodes.callback_url.maxLength                           },
+        { rule: 'url',              message: errorCodes.callback_url.url                                 }
     ]}, 
     function(form){
-        return form.hasOwnProperty('webhook_url');
+        return form.hasOwnProperty('callback_url');
 })
 .maybe({amount_to_collect: [
         { rule: 'required',         message: errorCodes.amount_to_collect.required                      },
@@ -152,4 +137,39 @@ module.exports.form = new Checkit({
     ]}, 
     function(form){
         return form.is_cod;
+})
+.maybe({"consignee_address.complete_address": [
+        { rule: 'required',         message: errorCodes.consignee_address.complete_address.required     },
+        { rule: 'string',           message: errorCodes.consignee_address.complete_address.string       },
+        { rule: 'maxLength:300',    message: errorCodes.consignee_address.complete_address.maxLength    }
+    ]}, function(form){
+        return form.hasOwnProperty('consignee_address');
+})
+.maybe({"consignee_address.province": [
+        { rule: 'required',         message: errorCodes.consignee_address.province.required             },
+        { rule: 'string',           message: errorCodes.consignee_address.province.string               },
+        { rule: 'maxLength:50',    message: errorCodes.consignee_address.province.maxLength            }
+    ]}, function(form){
+        return form.hasOwnProperty('consignee_address');
+})
+.maybe({"consignee_address.city": [
+        { rule: 'required',         message: errorCodes.consignee_address.city.required                 },
+        { rule: 'string',           message: errorCodes.consignee_address.city.string                   },
+        { rule: 'maxLength:50',     message: errorCodes.consignee_address.city.maxLength                }
+    ]}, function(form){
+        return form.hasOwnProperty('consignee_address');
+})
+.maybe({"consignee_address.barangay": [
+        { rule: 'required',         message: errorCodes.consignee_address.barangay.required             },
+        { rule: 'string',           message: errorCodes.consignee_address.barangay.string               },
+        { rule: 'maxLength:50',     message: errorCodes.consignee_address.barangay.maxLength            }
+    ]}, function(form){
+        return form.hasOwnProperty('consignee_address');
+})
+.maybe({"consignee_address.street_address": [
+        { rule: 'required',         message: errorCodes.consignee_address.street_address.required       },
+        { rule: 'string',           message: errorCodes.consignee_address.street_address.string         },
+        { rule: 'maxLength:150',     message: errorCodes.consignee_address.street_address.maxLength     }
+    ]}, function(form){
+        return form.hasOwnProperty('consignee_address');
 });
