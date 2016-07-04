@@ -14,7 +14,7 @@ describe('waybill create form test cases', function(){
     };
 
     describe('consignee address test cases', function(){
-        it('should fail on missing address', function(){
+        it('should fail on missing top level address object', function(){
             return form
                 .run({})
                 .catch(function(data){
@@ -22,35 +22,73 @@ describe('waybill create form test cases', function(){
                 });
         });
 
-        it('should fail on more than 300 char address', function(){
+        it('should fail on missing address keys', function(){
             return form
                 .run({
-                    consignee_address: 'a'.repeat(301)
+                    consignee_address: {}
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.consignee_address.maxLength);
+                    doesContainHelper(data, errorCodes.consignee_address.complete_address.required);
+                    doesContainHelper(data, errorCodes.consignee_address.province.required);
+                    doesContainHelper(data, errorCodes.consignee_address.city.required);
+                    doesContainHelper(data, errorCodes.consignee_address.barangay.required);
                 });
         });
 
-        it('should fail on a non char address', function(){
+        it('should fail on non string entries', function(){
             return form
                 .run({
-                    consignee_address: 123
+                    consignee_address: {
+                        complete_address: 123,
+                        province: 456,
+                        city: 789,
+                        barangay: 312
+                    }
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.consignee_address.string);
+                    doesContainHelper(data, errorCodes.consignee_address.complete_address.string);
+                    doesContainHelper(data, errorCodes.consignee_address.province.string);
+                    doesContainHelper(data, errorCodes.consignee_address.city.string);
+                    doesContainHelper(data, errorCodes.consignee_address.barangay.string);
                 });
         });
 
-        it('should succeed on a valid address', function(){
+        it('should fail on excess chars', function(){
             return form
                 .run({
-                    consignee_address: 'Numazu, Japan'
+                    consignee_address: {
+                        complete_address: 'a'.repeat(301),
+                        province: 'b'.repeat(51),
+                        city: 'c'.repeat(51),
+                        barangay: 'd'.repeat(51)
+                    }
                 })
                 .catch(function(data){
-                    expect(data.errors).to.not.contain.keys('consignee_address');
+                    doesContainHelper(data, errorCodes.consignee_address.complete_address.maxLength);
+                    doesContainHelper(data, errorCodes.consignee_address.province.maxLength);
+                    doesContainHelper(data, errorCodes.consignee_address.city.maxLength);
+                    doesContainHelper(data, errorCodes.consignee_address.barangay.maxLength);
                 });
         });
+
+        it('should succeed on valid entries', function(){
+            return form
+                .run({
+                    consignee_address: {
+                        complete_address: 'HAC Numazu, Japan',
+                        province: 'Numazu',
+                        city: 'Numazu-shi',
+                        barangay: 'HAC'
+                    }
+                })
+                .catch(function(data){
+                    expect(data.errors).to.not.contain.keys('consignee_address.complete_address');
+                    expect(data.errors).to.not.contain.keys('consignee_address.province');
+                    expect(data.errors).to.not.contain.keys('consignee_address.city');
+                    expect(data.errors).to.not.contain.keys('consignee_address.barangay');
+                });
+        });
+
     });
 
     describe('consignee name test cases', function(){

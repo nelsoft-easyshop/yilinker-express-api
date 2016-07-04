@@ -22,41 +22,49 @@ var waybillErrorCodes = formObject.errorCodes;
  *          -H "Content-Type: application/json" \
  *          -u <client_key>:<client_secret> \
  *          -d '{ 
- *              "consignee_address": "221 B Baker St.", 
- *              "consignee_name": "Alan Turing", 
+ *              "consignee_address": {
+ *                  "complete_address": "1000 Jose P Laurel Sr, San Miguel, Manila, Metro Manila",
+ *                  "province": "Metro Manila",
+ *                  "city": "Manila",
+ *                  "barangay": "San Miguel"
+ *              }, 
+ *              "consignee_name": "Normie Ree", 
  *              "consignee_contact_number": "639000000000", 
  *              "is_cod": true, 
  *              "declared_value": 123.45, 
- *              "package_description": "Smaug 1:1 Replica", 
+ *              "package_description": "Crimson Web Karambit", 
  *              "amount_to_collect": 678.90,
- *              "webhook_url": https://example.com/waybill/receive 
+ *              "webhook_url": "https://example.com/waybill/receive" 
  *          }'
  *
- * 
- * @apiParam    (Parameters)    {String{max of 300 chars}}                          consignee_address           Consignee's Address
- * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_name              Consignee's Name
- * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_contact_number    Consignee's Contact Number
- * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     declared_value              Shipment's Value
- * @apiParam    (Parameters)    {String{max of 500 chars}}                          package_description         Brief Description of Package
- * @apiParam    (Parameters)    {Boolean=true, false}                               is_cod                      Is Package to be tagged as Cash On Delivery?
- * @apiParam    (Parameters)    {String{max of 300 chars}}                          [webhook_url]               A valid URL where the details of generated waybill should be sent
- * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     [amount_to_collect]         Amount to collect (Required if COD)
- * @apiParam    (Parameters)    {String{max of 50 chars}}                           [reference_number]          Any value that would be binded to this waybill
+ * @apiParam    (Parameters)    {Object}                                            consignee_address                   Consignee Address Object
+ * @apiParam    (Parameters)    {String{max of 300 chars}}                          consignee_address.complete_address  Consignee's Complete Address
+ * @apiParam    (Parameters)    {String{max of 50 chars}}                           consignee_address.province          Province the consignee address is located in
+ * @apiParam    (Parameters)    {String{max of 50 chars}}                           consignee_address.city              City the consignee address is located in
+ * @apiParam    (Parameters)    {String{max of 50 chars}}                           consignee_address.barangay          Barangay the consignee address is located in
+ * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_name                      Consignee's Name
+ * @apiParam    (Parameters)    {String{max of 150 chars}}                          consignee_contact_number            Consignee's Contact Number
+ * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     declared_value                      Shipment's Value
+ * @apiParam    (Parameters)    {String{max of 500 chars}}                          package_description                 Brief Description of Package
+ * @apiParam    (Parameters)    {Boolean=true, false}                               is_cod                              Is Waybill to be tagged as Cash On Delivery?
+ * @apiParam    (Parameters)    {String{max of 300 chars}}                          [webhook_url]                       A valid URL where the details of generated waybill should be sent
+ * @apiParam    (Parameters)    {Decimal{max of 11 whole and 2 decimal digits}}     [amount_to_collect]                 Amount to collect (Required if COD)
+ * @apiParam    (Parameters)    {String{max of 50 chars}}                           [reference_number]                  Any value that would be binded to this waybill
  *
- * @apiParam    (Webhook)       {String}                                            waybill_number              Waybill Number
- * @apiParam    (Webhook)       {String}                                            reference_number            Reference number binded on request
- * @apiParam    (Webhook)       {String}                                            waybill_status_name         Initial Waybill Status Name
- * @apiParam    (Webhook)       {Number}                                            waybill_status_value        Initial Waybill Status Value
+ * @apiParam    (Webhook)       {String}                                            waybill_number                      Waybill Number
+ * @apiParam    (Webhook)       {String}                                            reference_number                    Reference number binded on request
+ * @apiParam    (Webhook)       {String}                                            waybill_status_name                 Initial Waybill Status Name
+ * @apiParam    (Webhook)       {Number}                                            waybill_status_value                Initial Waybill Status Value
  * 
- * @apiSuccess  (Success)       {String}                                            status                      State of response
- * @apiSuccess  (Success)       {Object}                                            data                        Data object
+ * @apiSuccess  (Success)       {String}                                            status                              State of response
+ * @apiSuccess  (Success)       {Object}                                            data                                Data object
  *
  * @apiSuccessExample Success (Response):
  *     HTTP/1.1 200 OK
  *     {
  *         "status": "successful",
  *         "data": null,
- *         message: ""
+ *         "message": ""
  *     }
  *
  * @apiSuccessExample Webhook (Request):
@@ -102,7 +110,8 @@ module.exports = function(req, res, next){
                 settings.consumer_id = req.consumerId;
 
                 // queue job here
-                waybillQueue.add(Object.assign({}, settings, validatedData));
+                // use req.body since checkit has a bug that does not return nested objects
+                waybillQueue.add(Object.assign({}, settings, req.body));
                 return Promise.resolve();
             }
             throw new Error(waybillErrorCodes.api_address.required);
