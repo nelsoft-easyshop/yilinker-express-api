@@ -26,7 +26,8 @@ var waybillErrorCodes = formObject.errorCodes;
  *                  "complete_address": "1000 Jose P Laurel Sr, San Miguel, Manila, Metro Manila",
  *                  "province": "Metro Manila",
  *                  "city": "Manila",
- *                  "barangay": "San Miguel"
+ *                  "barangay": "San Miguel",
+ *                  "street_address": "1000 Jose P Laurel Sr"
  *              }, 
  *              "consignee_name": "Normie Ree", 
  *              "consignee_contact_number": "639000000000", 

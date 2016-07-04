@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha -R spec test/ --recursive && jshint app/ src/ bin/www test/ app.js",
     "postinstall": "bin/update_config.js",
-    "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/"
+    "generate-doc": "apidoc -i src/ -o ../yilinker-express-api-doc/ -t doc/template/ -c doc/ && doc/bin/generate_error_codes.js"
   },
   "author": "",
   "license": "ISC",

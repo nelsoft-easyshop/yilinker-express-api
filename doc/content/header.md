@@ -43,31 +43,31 @@ send under the API Framework.
 A tutorial on how to set the default shipper address can be found [here](https://i.imgur.com/ozrAcKU.gifv). If the client does not have an address yet,
 a tutorial on how to generate an address can be found [here](https://i.imgur.com/eW7HObI.gifv).
 
-#### Webhooks (Optional)
+#### Callbacks (Optional)
 
-The API Framework utilizes webhooks to increase the responsiveness of I/O bound endpoints and avoid request timeouts. This adds asynchronicity to the framework but is optional.
-Webhooks are simply callback urls from where the API Framework will send a result payload after the system has finished processing an I/O bounded client request.
-
-
-If the webhook url is omitted on the request parameters, the endpoint will still process the request but will not return any result.
+The API Framework utilizes callbacks to increase the responsiveness of I/O bound endpoints and avoid request timeouts. This adds asynchronicity to the framework but is optional.
+They are simply urls from where the API Framework will send a result payload after the system has finished processing an I/O bounded client request.
 
 
-A more verbose definition can be found [here](https://en.wikipedia.org/wiki/Webhook).
+If the callback url is omitted on the request parameters, the endpoint will still process the request but will not return any result.
 
-##### Securing Webhooks
+
+A more verbose definition can be found [here](https://en.wikipedia.org/wiki/Callback_(computer_programming)).
+
+##### Securing Callback URLS
 
 Once the client has configured their application to receive payloads from the Express API, it is of paramount importance to secure these endpoints from malicious attacks.
 The API Framework incorporates an HMAC-SHA-256 hexdigest on every payload which the client can use to verify the authenticity and integrity of the payload.
 
 
-The client first must [set the Webhook Secret Token](https://i.imgur.com/3ytSXdS.gifv) option on the Client API Setting. When the token is set, the Express API will use it to create the hash signature with each payload.
+The client first must [set the Callback Secret Token](https://i.imgur.com/3ytSXdS.gifv) option on the Client API Setting. When the token is set, the Express API will use it to create the hash signature with each payload.
 This hash signature is passed along with every request in the headers as `X-YLX-Signature`.
 
 
-The task of the client then is to compute a hash using the Webhook Secret Token provided and ensure that the hash from the Express API payload matches.
+The task of the client then is to compute a hash using the Callback Secret Token provided and ensure that the hash from the Express API payload matches.
 
 
-If ever the client forgets to set the Webhook Secret Token and tries to subscribe to the webhook, the empty string `''` will be used as the key for the hash.
+If ever the client forgets to set the Callback Secret Token and tries to subscribe to the Callback, the empty string `''` will be used as the key for the hash.
 
 
 ### API Routes Versioning
