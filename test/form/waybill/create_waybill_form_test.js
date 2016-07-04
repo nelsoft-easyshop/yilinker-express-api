@@ -32,6 +32,7 @@ describe('waybill create form test cases', function(){
                     doesContainHelper(data, errorCodes.consignee_address.province.required);
                     doesContainHelper(data, errorCodes.consignee_address.city.required);
                     doesContainHelper(data, errorCodes.consignee_address.barangay.required);
+                    doesContainHelper(data, errorCodes.consignee_address.street_address.required);
                 });
         });
 
@@ -42,7 +43,8 @@ describe('waybill create form test cases', function(){
                         complete_address: 123,
                         province: 456,
                         city: 789,
-                        barangay: 312
+                        barangay: 312,
+                        street_address: 999
                     }
                 })
                 .catch(function(data){
@@ -50,6 +52,7 @@ describe('waybill create form test cases', function(){
                     doesContainHelper(data, errorCodes.consignee_address.province.string);
                     doesContainHelper(data, errorCodes.consignee_address.city.string);
                     doesContainHelper(data, errorCodes.consignee_address.barangay.string);
+                    doesContainHelper(data, errorCodes.consignee_address.street_address.string);
                 });
         });
 
@@ -60,7 +63,8 @@ describe('waybill create form test cases', function(){
                         complete_address: 'a'.repeat(301),
                         province: 'b'.repeat(51),
                         city: 'c'.repeat(51),
-                        barangay: 'd'.repeat(51)
+                        barangay: 'd'.repeat(51),
+                        street_address: 'e'.repeat(151)
                     }
                 })
                 .catch(function(data){
@@ -68,6 +72,7 @@ describe('waybill create form test cases', function(){
                     doesContainHelper(data, errorCodes.consignee_address.province.maxLength);
                     doesContainHelper(data, errorCodes.consignee_address.city.maxLength);
                     doesContainHelper(data, errorCodes.consignee_address.barangay.maxLength);
+                    doesContainHelper(data, errorCodes.consignee_address.street_address.maxLength);
                 });
         });
 
@@ -78,7 +83,8 @@ describe('waybill create form test cases', function(){
                         complete_address: 'HAC Numazu, Japan',
                         province: 'Numazu',
                         city: 'Numazu-shi',
-                        barangay: 'HAC'
+                        barangay: 'HAC',
+                        street_address: 'Leo Parasu'
                     }
                 })
                 .catch(function(data){
@@ -86,9 +92,9 @@ describe('waybill create form test cases', function(){
                     expect(data.errors).to.not.contain.keys('consignee_address.province');
                     expect(data.errors).to.not.contain.keys('consignee_address.city');
                     expect(data.errors).to.not.contain.keys('consignee_address.barangay');
+                    expect(data.errors).to.not.contain.keys('consignee_address.barangay');
                 });
         });
-
     });
 
     describe('consignee name test cases', function(){
@@ -291,62 +297,62 @@ describe('waybill create form test cases', function(){
         });
     });
 
-    describe('webhook url test cases', function(){
+    describe('callback url test cases', function(){
         it('should not fail on missing key', function(){
             return form
                 .run({})
                 .catch(function(data){
-                    expect(data.errors).to.not.contain.keys('webhook_url');
+                    expect(data.errors).to.not.contain.keys('callback_url');
                 });
         });
 
-        it('should fail on empty webhook url', function(){
+        it('should fail on empty callback url', function(){
             return form
                 .run({
-                    webhook_url: ''
+                    callback_url: ''
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.webhook_url.required);
+                    doesContainHelper(data, errorCodes.callback_url.required);
                 });
         });
 
         it('should fail on above max char', function(){
             return form
                 .run({
-                    webhook_url: 'a'.repeat(301)
+                    callback_url: 'a'.repeat(301)
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.webhook_url.maxLength);
+                    doesContainHelper(data, errorCodes.callback_url.maxLength);
                 });
         });
 
         it('should fail on a non char', function(){
             return form
                 .run({
-                    webhook_url: 123
+                    callback_url: 123
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.webhook_url.string);
+                    doesContainHelper(data, errorCodes.callback_url.string);
                 });
         });
 
         it('should fail on an invalid webhook url', function(){
             return form
                 .run({
-                    webhook_url: 'not a url obviously'
+                    callback_url: 'not a url obviously'
                 })
                 .catch(function(data){
-                    doesContainHelper(data, errorCodes.webhook_url.url);
+                    doesContainHelper(data, errorCodes.callback_url.url);
                 });
         });
 
         it('should succeed on a valid webhook url', function(){
             return form
                 .run({
-                    webhook_url: 'https://google.com/hook'
+                    callback_url: 'https://google.com/hook'
                 })
                 .catch(function(data){
-                    expect(data.errors).to.not.contain.keys('webhook_url');
+                    expect(data.errors).to.not.contain.keys('callback_url');
                 });
         });
     });

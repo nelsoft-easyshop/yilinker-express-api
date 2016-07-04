@@ -42,16 +42,24 @@ describe('waybill creation test cases', function(){
     });
 
     it('should fail on missing default shipper address', function(){
-        var req = { body: {
-            "consignee_address": "maginhawa st. QC",
-            "consignee_name": "Sherlock Meme",
-            "consignee_contact_number": "12345678",
-            "is_cod": true,
-            "declared_value": 12312.23,
-            "package_description": "gundam",
-            "amount_to_collect": 1000,
-            "webhook_url": "http://127.0.0.1:9999"
-        }};
+        var req = { 
+            "body": {
+                "consignee_address": {
+                    "complete_address":"Quiapo Metro Manila",
+                    "province":"Man",
+                    "city":"Man",
+                    "barangay":"Qui",
+                    "street_address": "streeet"
+                },
+                "consignee_name": "LA Roberto",
+                "consignee_contact_number": "12345678",
+                "is_cod": true,
+                "declared_value": 12312.23,
+                "package_description": "gundam",
+                "amount_to_collect": 1000,
+                "callback_url": "http://127.0.0.1:9999"
+            }
+        };
 
         var resSpy = {
             json: sinon.spy(),
@@ -91,17 +99,22 @@ describe('waybill creation test cases', function(){
         };
 
         var req = { 
-            body: {
-                "consignee_address": "maginhawa st. QC",
-                "consignee_name": "Sherlock Meme",
+            "body": {
+                "consignee_address": {
+                    "complete_address":"Quiapo Metro Manila",
+                    "province":"Man",
+                    "city":"Man",
+                    "barangay":"Qui",
+                    "street_address": "streeet"
+                },
+                "consignee_name": "LA Roberto",
                 "consignee_contact_number": "12345678",
                 "is_cod": true,
                 "declared_value": 12312.23,
                 "package_description": "gundam",
                 "amount_to_collect": 1000,
-                "webhook_url": "http://127.0.0.1:9999"
-            },
-            consumerId: 13
+                "callback_url": "http://127.0.0.1:9999"
+            }
         };
 
         var resSpy = {
@@ -127,19 +140,6 @@ describe('waybill creation test cases', function(){
                 [waybillQueuePath]: waybillQueueStub
             })(req, resSpy)
             .then(function(data){
-                expect(waybillQueueStub.waybillQueue.add).to.have.been.calledWithExactly({
-                    default_address_id: 15,
-                    consignee_address: "maginhawa st. QC",
-                    consignee_name: "Sherlock Meme",
-                    consignee_contact_number: "12345678",
-                    is_cod: true,
-                    declared_value: 12312.23,
-                    package_description: "gundam",
-                    amount_to_collect: 1000,
-                    webhook_url: "http://127.0.0.1:9999",
-                    consumer_id: 13
-                });
-
                 expect(resSpy.json).to.have.been.calledWithExactly({
                     status: 'successful',
                     data: null,
