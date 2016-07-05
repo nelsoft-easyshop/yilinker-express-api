@@ -6,7 +6,7 @@ var app = require('../../../../app');
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('get waybill details test cases', function(){
+describe('get waybill details integration test cases', function(){
     it('should fail on invalid credentials', function(){
         return request(app)
             .get('/v1/waybill/details/foo')
