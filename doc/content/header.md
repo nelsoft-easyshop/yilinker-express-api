@@ -84,7 +84,7 @@ Body: {
 }
 ```
 
-First step would be to stringify the JSON object which would yield:
+First step will be to stringify the JSON object which will yield:
 
 `{"waybill_number":"WBEPH000100000014161","reference_number":"","waybill_status_name":"For verification","waybill_status_value":15}`
 
@@ -101,8 +101,13 @@ The API Framework route versioning adheres to [Semantic Versioning](http://semve
 * Minor version bump (0.x.0) contains new functionalities that are backwards-compatible.
 * Patch version bump (0.0.x) contains backwards-compatible bug fixes.
 
-As such, the API would only incorporate Major version bump in the route endpoints (e.g `/v3/create-waybill/`).
+As such, the API will only incorporate the major version in the route endpoints (e.g `/v3/create-waybill/`).
 
 The latest version of the route will be reflected by the giant dropdown button on the very top of this page.
 
 Yilinker Express will send email notifications on the event of a major version bump only. The email will include details regarding breaking changes, upgrading and deprecation timeline.
+
+
+### Support
+
+Further inquiries may be sent to `developer-express@yilinker.com`.
