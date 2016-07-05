@@ -110,4 +110,4 @@ Yilinker Express will send email notifications on the event of a major version b
 
 ### Support
 
-Further inquiries may be sent to `developer-express@yilinker.com`.
+Further inquiries may be sent to `developer-express@yilinker.ph`.
