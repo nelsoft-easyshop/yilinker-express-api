@@ -614,6 +614,9 @@ code{
   font-family: "Roboto" !important;
   font-size: 22px;
 }
+#header pre{
+  margin-top: 20px !important;
+}
 #sections > section{
   border: 0;
 }
