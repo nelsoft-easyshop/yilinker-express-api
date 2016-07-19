@@ -87,7 +87,7 @@ var waybillErrorCodes = formObject.errorCodes;
  * @apiError    (Error 400)     {String}                        message                     Human Readable Error
  *
  * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
+ *     HTTP/1.1 400 Bad Request
  *     {
  *       "status": "failed",
  *       "data": {
